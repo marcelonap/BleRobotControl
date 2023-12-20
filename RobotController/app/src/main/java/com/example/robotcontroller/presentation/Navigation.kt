@@ -25,7 +25,8 @@ fun Navigation(
         composable(Screen.StartScreen.route){
             StartScreen(
                 navController = navController,
-                onButtonClicked = onButtonClicked)
+                onButtonClicked = onButtonClicked,
+                onBluetoothStateChanged = onBluetoothStateChanged)
         }
     }
 }

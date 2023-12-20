@@ -28,7 +28,8 @@ import com.example.robotcontroller.viewmodels.RobotViewModel
 fun StartScreen(
     navController: NavController,
     viewModel: RobotViewModel = hiltViewModel(),
-    onButtonClicked: () -> Unit
+    onButtonClicked: () -> Unit,
+    onBluetoothStateChanged: ()-> Unit
 ) {
     var sliderValue by remember { mutableStateOf(1f) }
 
@@ -62,8 +63,8 @@ fun StartScreen(
         Slider(
             value = sliderValue,
             onValueChange = { sliderValue = it },
-            valueRange = 1f..10f,
-            steps = 8
+            valueRange = 0f..10f,
+            steps = 9
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -79,8 +80,6 @@ fun StartScreen(
 @Composable
 fun StartScreenPreview() {
     RobotControllerTheme {
-       StartScreen(navController = rememberNavController()){
-
-       }
+       StartScreen(navController = rememberNavController(), onButtonClicked = {}, onBluetoothStateChanged = {})
     }
 }
