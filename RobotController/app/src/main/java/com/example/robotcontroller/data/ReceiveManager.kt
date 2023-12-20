@@ -12,7 +12,7 @@ interface ReceiveManager {
 
     fun reconnect()
     fun disconnect()
-    fun startReceiving()
+    fun startScan()
     fun closeConnection()
     fun connect(device: BluetoothDevice)
     fun stopScan()

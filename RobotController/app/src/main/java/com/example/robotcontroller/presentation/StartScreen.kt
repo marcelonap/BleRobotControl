@@ -17,14 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.robotcontroller.Greeting
 import com.example.robotcontroller.ui.theme.RobotControllerTheme
+import com.example.robotcontroller.viewmodels.RobotViewModel
 
 @Composable
 fun StartScreen(
     navController: NavController,
+    viewModel: RobotViewModel = hiltViewModel(),
     onButtonClicked: () -> Unit
 ) {
     var sliderValue by remember { mutableStateOf(1f) }
