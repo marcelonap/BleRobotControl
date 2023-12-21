@@ -16,6 +16,6 @@ interface ReceiveManager {
     fun closeConnection()
     fun connect(device: BluetoothDevice)
     fun stopScan()
-    fun writeToChar(characteristic: BluetoothGattCharacteristic)
+    fun writeMove(move:String)
 
 }

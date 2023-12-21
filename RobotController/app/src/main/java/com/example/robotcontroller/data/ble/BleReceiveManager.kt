@@ -97,13 +97,13 @@ class BleReceiveManager @Inject constructor(
         }
         bleScanner.stopScan(myScanCallback)
     }
-    override fun writeToChar(characteristic: BluetoothGattCharacteristic)
+    override fun writeMove(move: String)
     {
         val robotCharacteristic =
             findCharacteristic(BLEGattAttributes.RobotService.uuid, BLEGattAttributes.RobotCharacteristic.uuid)
                 ?: return
 
-        writeCharacteristic(robotCharacteristic,"test")
+        writeCharacteristic(robotCharacteristic,move)
 
     }
 

@@ -86,6 +86,12 @@ class RobotViewModel @Inject constructor(
         )
     }
 
+    fun writeMove(move: String){
+        receiveManager.writeMove(move)
+    }
+    fun connect(device: BluetoothDevice){
+        receiveManager.connect(device)
+    }
     fun reconnect() {
         receiveManager.reconnect()
     }
@@ -94,6 +100,9 @@ class RobotViewModel @Inject constructor(
         subscribeToChanges()
         receiveManager.startScan()
     }
+    fun stopScanning(){
+        receiveManager.stopScan()
+    }
     fun disconnect(){
         receiveManager.disconnect()
         connectedDevice = null
@@ -101,6 +110,10 @@ class RobotViewModel @Inject constructor(
         receiveManager.closeConnection()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        receiveManager.closeConnection()
+    }
 
 
 }

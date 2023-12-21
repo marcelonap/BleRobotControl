@@ -1,5 +1,6 @@
 package com.example.robotcontroller.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -26,6 +27,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.robotcontroller.data.ConnectionState
+import com.example.robotcontroller.presentation.components.FindDeviceScreen
 import com.example.robotcontroller.presentation.permissions.BluetoothStateViewModel
 import com.example.robotcontroller.presentation.permissions.PermissionUtils
 import com.example.robotcontroller.ui.theme.RobotControllerTheme
@@ -33,6 +35,7 @@ import com.example.robotcontroller.viewmodels.RobotViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun StartScreen(
@@ -102,19 +105,19 @@ fun StartScreen(
     ) {
         // Arrow Buttons with Icons
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { /* Handle left arrow click */ }) {
+            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0") }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Left")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                IconButton(onClick = { /* Handle up arrow click */ }) {
-                    Icon(Icons.Default.ArrowUpward, contentDescription = "Up")
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0")}) {
+                    Icon(Icons.Default.ArrowUpward, contentDescription = "Forward")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                IconButton(onClick = { /* Handle down arrow click */ }) {
-                    Icon(Icons.Default.ArrowDownward, contentDescription = "Down")
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0") }) {
+                    Icon(Icons.Default.ArrowDownward, contentDescription = "Backward")
                 }
             }
-            IconButton(onClick = { /* Handle right arrow click */ }) {
+            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0")}) {
                 Icon(Icons.Default.ArrowForward, contentDescription = "Right")
             }
         }
@@ -124,8 +127,10 @@ fun StartScreen(
         // Slider
         Text("Adjust Value: ${sliderValue.toInt()}")
         Slider(
+            enabled = viewModel.isDeviceConnected,
             value = sliderValue,
-            onValueChange = { sliderValue = it },
+            onValueChange = { sliderValue = it
+                viewModel.writeMove("@S$sliderValue")},
             valueRange = 0f..10f,
             steps = 0
         )
@@ -133,10 +138,15 @@ fun StartScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Scan Devices Button
-        Button(onClick = { viewModel.startScan() }) {
-            Text("Scan Devices")
+//        Button(onClick = { viewModel.startScan() }) {
+//            Text("Scan Devices")
+//        }
+        if(!viewModel.isDeviceConnected && canAttemptScan) {
+            FindDeviceScreen(innerPadding = PaddingValues(8.dp), viewModel = viewModel)
+        }else if(viewModel.isDeviceConnected){
+            Text("Connected to ${viewModel.connectedDevice!!.name}")
         }
-    }
+        }
 }
 
 @Preview(showBackground = true)
