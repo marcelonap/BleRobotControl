@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.example.robotcontroller.data.ble.BleReceiveManager
 import com.example.robotcontroller.data.ReceiveManager
+import com.example.robotcontroller.presentation.permissions.BluetoothStateViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-
+    //test
     //getting bluetooth adapter and providing it to application
     //obtain an instance of the BluetoothManager system service. Calling BluetoothManager#getAdapter will give you a BluetoothAdapter object
     @Provides
@@ -25,6 +26,8 @@ object AppModule {
         val manager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         return manager.adapter
     }
+
+
 
     @Provides
     @Singleton
