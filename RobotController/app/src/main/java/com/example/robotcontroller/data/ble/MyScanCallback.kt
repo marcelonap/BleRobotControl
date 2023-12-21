@@ -23,12 +23,12 @@ class MyScanCallback(private val bleManager: BleReceiveManager) : ScanCallback()
 
         if(bleManager.isScanning && !listOfDevices.contains(result.device) && !result.device.name.isNullOrBlank() ){
             // if(result.device.name.contains("")){
-            if ( result.device.name.contains( "")) {
+            if ( !result.device.name.isNullOrBlank()) {
                 listOfDevices.add(result.device)
                 bleManager.coroutineScope.launch {
                     bleManager.data.emit(Resource.Loading(message = "Finding Devices..."))
                     bleManager.scannedDevice.emit(result.device)
-                    delay(1000)
+                    delay(10000)
                 }
                 Log.d("DeviceFound", " name: ${result.scanRecord?.deviceName}")
                 Log.d("DeviceFound", " uuid: ${result.scanRecord?.serviceUuids.toString()}")

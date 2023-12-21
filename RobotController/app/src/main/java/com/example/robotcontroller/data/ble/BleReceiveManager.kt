@@ -64,6 +64,13 @@ class BleReceiveManager @Inject constructor(
         gatt?.disconnect()
     }
     override fun startScan(){
+        coroutineScope.launch{
+            //Exposing state to rest of the app
+            data.emit(Resource.Loading(message = "Looking for robot..."))
+        }
+        isScanning = true //setting scan flag
+        //Starting BLE scan: no filters, scanSettings object created @49, scanCallBack @171
+        Log.d("DeviceFound"," startScan called")
         bleScanner.startScan(myScanCallback)
     }
     override fun closeConnection()
