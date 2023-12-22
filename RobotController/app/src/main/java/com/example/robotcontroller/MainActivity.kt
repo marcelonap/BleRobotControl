@@ -7,7 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -30,12 +32,15 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.robotcontroller.data.ConnectionState
 import com.example.robotcontroller.presentation.Navigation
+import com.example.robotcontroller.presentation.components.BluetoothPermissionTextProvider
 import com.example.robotcontroller.presentation.components.PermissionDialog
 import com.example.robotcontroller.presentation.permissions.BluetoothStateViewModel
 import com.example.robotcontroller.presentation.permissions.PermissionUtils
 import com.example.robotcontroller.ui.theme.RobotControllerTheme
+import com.example.robotcontroller.viewmodels.PermissionsViewModel
 import com.example.robotcontroller.viewmodels.RobotViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -67,16 +72,50 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RobotControllerTheme {
+                val viewModel = viewModel<PermissionsViewModel>()
+                val dialogQueue = viewModel.visiblePermissionDialogQueue
                 val permissionState = rememberMultiplePermissionsState(permissions = PermissionUtils.permissions)
+                var deniedCount by remember { mutableStateOf(0) }
+                var showRationaleDialog by remember { mutableStateOf(!permissionState.allPermissionsGranted) }
+                val permissionTextProvider = BluetoothPermissionTextProvider()
 
-                LaunchedEffect(permissionState.permissionRequested) {
-                    if (permissionState.allPermissionsGranted) {
-                        Log.d("PermissionTest", "Permissions granted")
-                    } else {
-                       permissionState.launchMultiplePermissionRequest()
-                        Log.d("PermissionTest", "Permissions denied")
+                if (showRationaleDialog && !permissionState.allPermissionsGranted){
+                    PermissionDialog(
+                        permissionTextProvider = permissionTextProvider,
+                        isPermanentlyDeclined = deniedCount >= 2 , // Set to true if permissions are permanently declined
+                        onDismiss = {
+                            showRationaleDialog = false
+                        },
+                        onOkClick = {
+                            showRationaleDialog = false
+                            permissionState.launchMultiplePermissionRequest()
+                        },
+                        onGoToAppSettingsClick = ::openAppSettings
+                    )
+                } else {
+                    LaunchedEffect(permissionState.permissionRequested) {
+                        if (permissionState.allPermissionsGranted) {
+                            deniedCount = 0 //Reset denied count
+                            showRationaleDialog = false
+                        } else {
+                            Log.d("PermissionTest", "$deniedCount")
+                            deniedCount++
+                            showRationaleDialog = true
+
+                        }
                     }
                 }
+
+//                LaunchedEffect(permissionState.permissionRequested) {
+//                    //ermissionState.launchMultiplePermissionRequest()
+//                    if (permissionState.allPermissionsGranted) {
+//                        Log.d("PermissionTest", "Permissions granted")
+//                    } else {
+//                       permissionState.launchMultiplePermissionRequest()
+//                       Log.d("PermissionTest", "Permissions granted")
+//                    }
+//                }
+
 
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -95,6 +134,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 
     //Checking for bluetooth state and enabling when  onStart executes
     override fun onStart() {
@@ -136,3 +176,9 @@ class MainActivity : ComponentActivity() {
         }
 }
 
+fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    ).also(::startActivity)
+}
