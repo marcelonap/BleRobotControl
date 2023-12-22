@@ -51,32 +51,8 @@ fun StartScreen(
 
     var canAttemptScan by rememberSaveable{ mutableStateOf(false)}
     val permissionState = rememberMultiplePermissionsState(permissions = PermissionUtils.permissions)
-    val lifecycleOwner = LocalLifecycleOwner.current
     val bleConnectionState = viewModel.connectionState
 
-    DisposableEffect(
-        key1 = lifecycleOwner,
-        effect = {
-            val observer = LifecycleEventObserver{_,event ->
-                if (event == Lifecycle.Event.ON_START) {
-                    permissionState.launchMultiplePermissionRequest()
-                    if (permissionState.allPermissionsGranted && bleConnectionState == ConnectionState.Disconnected) {
-                        viewModel.reconnect()
-                    }
-                }
-                if (event == Lifecycle.Event.ON_STOP) {
-                    if (bleConnectionState == ConnectionState.Connected) {
-                        viewModel.disconnect()
-                    }
-                }
-            }
-            lifecycleOwner.lifecycle.addObserver(observer)
-
-            onDispose {
-                lifecycleOwner.lifecycle.removeObserver(observer)
-            }
-        }
-    )
 
     LaunchedEffect(
         key1 = permissionState.allPermissionsGranted,

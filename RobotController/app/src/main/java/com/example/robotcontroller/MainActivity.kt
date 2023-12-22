@@ -1,5 +1,6 @@
 package com.example.robotcontroller
 
+import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
@@ -7,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,11 +19,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.example.robotcontroller.data.ConnectionState
 import com.example.robotcontroller.presentation.Navigation
+import com.example.robotcontroller.presentation.components.PermissionDialog
 import com.example.robotcontroller.presentation.permissions.BluetoothStateViewModel
+import com.example.robotcontroller.presentation.permissions.PermissionUtils
 import com.example.robotcontroller.ui.theme.RobotControllerTheme
+import com.example.robotcontroller.viewmodels.RobotViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -44,10 +62,22 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             RobotControllerTheme {
+                val permissionState = rememberMultiplePermissionsState(permissions = PermissionUtils.permissions)
+
+                LaunchedEffect(permissionState.permissionRequested) {
+                    if (permissionState.allPermissionsGranted) {
+                        Log.d("PermissionTest", "Permissions granted")
+                    } else {
+                       permissionState.launchMultiplePermissionRequest()
+                        Log.d("PermissionTest", "Permissions denied")
+                    }
+                }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
