@@ -72,10 +72,10 @@ interface PermissionTextProvider {
 class BluetoothPermissionTextProvider: PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean): String {
         return if(isPermanentlyDeclined) {
-            "It seems you permanently declined all necessary bluetooth related permissions. " +
+            "It seems you permanently declined all necessary bluetooth related permissions.\n " +
                     "You can go to the app settings to grant it."
         } else {
-            "This app needs access to all the requested bluetooth related permissions so it can appropriately interact with your Agra-gps device" +
+            " This app needs access to all the requested bluetooth related permissions so it can appropriately interact with your Agra-gps device\n" +
                     "Please grant all the requested permissions."
         }
     }
