@@ -39,12 +39,6 @@ fun Navigation(
 ){
     //Setting up navController to manage navigation between pages
     val navController = rememberNavController()
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val permissionState = rememberMultiplePermissionsState(permissions = PermissionUtils.permissions)
-    var showPermissionDialog by remember { mutableStateOf(false) }
-    val bleConnectionState = viewModel.connectionState
-
-
 
 
     //Instantiating navHost with our navcontroller and our starting screen

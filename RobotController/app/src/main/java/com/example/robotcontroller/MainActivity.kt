@@ -72,8 +72,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RobotControllerTheme {
-                val viewModel = viewModel<PermissionsViewModel>()
-                val dialogQueue = viewModel.visiblePermissionDialogQueue
                 val permissionState = rememberMultiplePermissionsState(permissions = PermissionUtils.permissions)
                 var deniedCount by remember { mutableStateOf(0) }
                 var showRationaleDialog by remember { mutableStateOf(!permissionState.allPermissionsGranted) }
@@ -84,7 +82,7 @@ class MainActivity : ComponentActivity() {
                         permissionTextProvider = permissionTextProvider,
                         isPermanentlyDeclined = deniedCount >= 2 , // Set to true if permissions are permanently declined
                         onDismiss = {
-                            showRationaleDialog = false
+                            showRationaleDialog = true
                         },
                         onOkClick = {
                             showRationaleDialog = false
@@ -93,9 +91,15 @@ class MainActivity : ComponentActivity() {
                         onGoToAppSettingsClick = ::openAppSettings
                     )
                 } else {
-                    LaunchedEffect(permissionState.permissionRequested) {
+                    LaunchedEffect(permissionState) {
                         if (permissionState.allPermissionsGranted) {
                             deniedCount = 0 //Reset denied count
+                            val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+                            registerReceiver(bluetoothStateReceiver, filter)
+                            bluetoothStateReceiver.onReceive(
+                                context = this@MainActivity,
+                                intent = Intent(BluetoothAdapter.ACTION_STATE_CHANGED)
+                            )
                             showRationaleDialog = false
                         } else {
                             Log.d("PermissionTest", "$deniedCount")
@@ -105,19 +109,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
-//                LaunchedEffect(permissionState.permissionRequested) {
-//                    //ermissionState.launchMultiplePermissionRequest()
-//                    if (permissionState.allPermissionsGranted) {
-//                        Log.d("PermissionTest", "Permissions granted")
-//                    } else {
-//                       permissionState.launchMultiplePermissionRequest()
-//                       Log.d("PermissionTest", "Permissions granted")
-//                    }
-//                }
-
-
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -139,9 +130,8 @@ class MainActivity : ComponentActivity() {
     //Checking for bluetooth state and enabling when  onStart executes
     override fun onStart() {
         super.onStart()
-        showBluetoothDialog()
-        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-        registerReceiver(bluetoothStateReceiver, filter)
+
+
     }
 
     override fun onStop() {

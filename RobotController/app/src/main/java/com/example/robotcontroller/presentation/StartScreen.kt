@@ -64,14 +64,6 @@ fun StartScreen(
         }
     }
 
-    LaunchedEffect(
-        key1 = isBluetoothEnabled,
-    ){
-        if(!isBluetoothEnabled){
-            onBluetoothStateChanged()
-        }
-    }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -122,7 +114,7 @@ fun StartScreen(
         }else if(viewModel.isDeviceConnected){
             Text("Connected to ${viewModel.connectedDevice!!.name}")
         }
-        }
+    }
 }
 
 @Preview(showBackground = true)
