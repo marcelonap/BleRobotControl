@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
@@ -17,13 +16,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.robotcontroller.data.ConnectionState
@@ -73,19 +68,19 @@ fun StartScreen(
     ) {
         // Arrow Buttons with Icons
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0") }) {
+            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0\r\n") }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Left")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0")}) {
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0\r\n")}) {
                     Icon(Icons.Default.ArrowUpward, contentDescription = "Forward")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0") }) {
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0\r\n") }) {
                     Icon(Icons.Default.ArrowDownward, contentDescription = "Backward")
                 }
             }
-            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0")}) {
+            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0\r\n")}) {
                 Icon(Icons.Default.ArrowForward, contentDescription = "Right")
             }
         }
@@ -98,7 +93,7 @@ fun StartScreen(
             enabled = viewModel.isDeviceConnected,
             value = sliderValue,
             onValueChange = { sliderValue = it
-                viewModel.writeMove("@S$sliderValue")},
+                viewModel.writeMove("@S$sliderValue\r\n")},
             valueRange = 0f..10f,
             steps = 0
         )
