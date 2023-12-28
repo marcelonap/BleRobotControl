@@ -22,6 +22,7 @@ class MyGattCallback(private val bleManager: BleReceiveManager) : BluetoothGattC
             if (newState == BluetoothProfile.STATE_CONNECTED) { //Checking if newest connection state is connected
                 bleManager.coroutineScope.launch {
                     //exposing state to rest of app
+
                     bleManager.data.emit(Resource.Loading(message = "Discovering Services..."))
                 }
                 //Attempting to discover services
@@ -81,6 +82,9 @@ class MyGattCallback(private val bleManager: BleReceiveManager) : BluetoothGattC
                 bleManager.data.emit(Resource.Error(errorMessage = "Could not find robot"))
             }
             return
+        }
+        bleManager.coroutineScope.launch {
+            bleManager.connectedDevice.emit(gatt.device)
         }
 
         validateConnectionCounter = 0
