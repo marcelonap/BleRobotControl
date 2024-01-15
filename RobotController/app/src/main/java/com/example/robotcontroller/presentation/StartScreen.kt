@@ -68,37 +68,26 @@ fun StartScreen(
     ) {
         // Arrow Buttons with Icons
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton( onClick = {
-                if(viewModel.isDeviceConnected)
-                    viewModel.writeMove("@ML0\r\n")
-            }) {
+            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0\r\n") }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Left")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                IconButton( onClick = {
-                    if(viewModel.isDeviceConnected){
-                    viewModel.writeMove("@MF0\r\n")
-                    }
-                }
-                ) {
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0\r\n")}) {
                     Icon(Icons.Default.ArrowUpward, contentDescription = "Forward")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                IconButton(onClick = {
-                    if(viewModel.isDeviceConnected)
-                    viewModel.writeMove("@MB0\r\n") }) {
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0\r\n") }) {
                     Icon(Icons.Default.ArrowDownward, contentDescription = "Backward")
                 }
             }
-            IconButton(onClick = {
-                if(viewModel.isDeviceConnected)
-                viewModel.writeMove("@MR0\r\n")}) {
+            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0\r\n")}) {
                 Icon(Icons.Default.ArrowForward, contentDescription = "Right")
             }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        Text("Device Connected: ${viewModel.isDeviceConnected}")
         // Slider
         Text("Adjust Value: ${sliderValue.toInt()}")
         Slider(
@@ -112,7 +101,10 @@ fun StartScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("is device connected: ${viewModel.isDeviceConnected}")
+        // Scan Devices Button
+//        Button(onClick = { viewModel.startScan() }) {
+//            Text("Scan Devices")
+//        }
         if(!viewModel.isDeviceConnected && canAttemptScan) {
             FindDeviceScreen(innerPadding = PaddingValues(8.dp), viewModel = viewModel)
         }else if(viewModel.isDeviceConnected){
