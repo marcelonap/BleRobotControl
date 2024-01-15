@@ -30,6 +30,9 @@ class MyGattCallback(private val bleManager: BleReceiveManager) : BluetoothGattC
                 //triggers onServicesDiscovered callback @103
                 gatt.discoverServices()
                 bleManager.gatt = gatt // Updates gatt instance
+                bleManager.coroutineScope.launch {
+                    bleManager.connectedDevice.emit(gatt.device)
+                }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {//Checks for connection state Disconnected
                 bleManager.coroutineScope.launch {
                     //exposing state to rest of the app

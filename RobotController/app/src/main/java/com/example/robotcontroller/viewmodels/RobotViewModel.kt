@@ -28,7 +28,7 @@ class RobotViewModel @Inject constructor(
 
     var deviceListState = mutableStateListOf<BluetoothDevice>()
         private set
-    var isDeviceConnected by mutableStateOf<Boolean>(false)
+    var isDeviceConnected by mutableStateOf(false)
     var _deviceListState = mutableStateListOf<ScannedDevice>()
         private set
     var  terminalMessages = mutableStateListOf<String>()

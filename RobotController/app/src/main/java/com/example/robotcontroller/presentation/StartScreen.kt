@@ -68,19 +68,31 @@ fun StartScreen(
     ) {
         // Arrow Buttons with Icons
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0\r\n") }) {
+            IconButton( onClick = {
+                if(viewModel.isDeviceConnected)
+                    viewModel.writeMove("@ML0\r\n")
+            }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Left")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0\r\n")}) {
+                IconButton( onClick = {
+                    if(viewModel.isDeviceConnected){
+                    viewModel.writeMove("@MF0\r\n")
+                    }
+                }
+                ) {
                     Icon(Icons.Default.ArrowUpward, contentDescription = "Forward")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0\r\n") }) {
+                IconButton(onClick = {
+                    if(viewModel.isDeviceConnected)
+                    viewModel.writeMove("@MB0\r\n") }) {
                     Icon(Icons.Default.ArrowDownward, contentDescription = "Backward")
                 }
             }
-            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0\r\n")}) {
+            IconButton(onClick = {
+                if(viewModel.isDeviceConnected)
+                viewModel.writeMove("@MR0\r\n")}) {
                 Icon(Icons.Default.ArrowForward, contentDescription = "Right")
             }
         }
@@ -100,10 +112,7 @@ fun StartScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Scan Devices Button
-//        Button(onClick = { viewModel.startScan() }) {
-//            Text("Scan Devices")
-//        }
+        Text("is device connected: ${viewModel.isDeviceConnected}")
         if(!viewModel.isDeviceConnected && canAttemptScan) {
             FindDeviceScreen(innerPadding = PaddingValues(8.dp), viewModel = viewModel)
         }else if(viewModel.isDeviceConnected){

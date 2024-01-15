@@ -129,9 +129,7 @@ class MainActivity : ComponentActivity() {
 
     //Checking for bluetooth state and enabling when  onStart executes
     override fun onStart() {
-        super.onStart()
-
-
+            super.onStart()
     }
 
     override fun onStop() {
