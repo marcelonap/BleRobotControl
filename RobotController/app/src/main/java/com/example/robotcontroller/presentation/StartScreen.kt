@@ -68,19 +68,19 @@ fun StartScreen(
     ) {
         // Arrow Buttons with Icons
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0\r\n") }) {
+            IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@ML0") }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Left")
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0\r\n")}) {
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MF0")}) {
                     Icon(Icons.Default.ArrowUpward, contentDescription = "Forward")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0\r\n") }) {
+                IconButton(enabled = viewModel.isDeviceConnected, onClick = { viewModel.writeMove("@MB0") }) {
                     Icon(Icons.Default.ArrowDownward, contentDescription = "Backward")
                 }
             }
-            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0\r\n")}) {
+            IconButton(enabled = viewModel.isDeviceConnected,onClick = { viewModel.writeMove("@MR0")}) {
                 Icon(Icons.Default.ArrowForward, contentDescription = "Right")
             }
         }
@@ -94,7 +94,7 @@ fun StartScreen(
             enabled = viewModel.isDeviceConnected,
             value = sliderValue,
             onValueChange = { sliderValue = it
-                viewModel.writeMove("@S$sliderValue\r\n")},
+                viewModel.writeMove("@S"+String.format("%02d",sliderValue))},
             valueRange = 0f..10f,
             steps = 0
         )

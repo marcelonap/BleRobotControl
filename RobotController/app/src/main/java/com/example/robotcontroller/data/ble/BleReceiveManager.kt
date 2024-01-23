@@ -128,7 +128,6 @@ class BleReceiveManager @Inject constructor(
     }
 
     private fun writeCharacteristic(characteristic: BluetoothGattCharacteristic, payload: String) {
-        if(!canWrite) return
 
         val writeType = when {
 
@@ -143,7 +142,6 @@ class BleReceiveManager @Inject constructor(
             characteristic.writeType = writeType
             characteristic.setValue(payload.toByteArray(Charsets.UTF_8))
             gatt.writeCharacteristic(characteristic)
-            canWrite = false
         } ?: error("Not connected to a BLE device!")
     }
     private fun disconnectCharacteristic(characteristic: BluetoothGattCharacteristic){
